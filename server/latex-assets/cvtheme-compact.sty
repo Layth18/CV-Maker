@@ -1,0 +1,31 @@
+% =============================================================================
+% cvtheme-compact.sty -- Compact theme
+% One-line entry headers, heading rules on the same line, tight lists.
+% =============================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{cvtheme-compact}[2026/11/01 v1.0 CV Studio compact theme]
+\RequirePackage{cvcore}
+
+\setlist*[cvbullets]{itemsep=0pt, topsep=1pt}
+\renewcommand\cvprintheadline{{\cvheadlinetext}}
+\setlength\cvbannerpad{0.45cm}
+
+\renewcommand\cvsectionformat[1]{%
+  \noindent{\color{cvheading}\cvheadingfont\cvheadingweight\cvheadingsizecmd\cvheadingcase{#1}}%
+  \enspace{\color{cvdivider}\leaders\vrule height 0.38em depth -0.32em\hfill}\par\nobreak\vspace{3pt}}
+
+% \cventry{title}{organization}{location}{date}{tech}{body}
+\renewcommand\cventry[6]{%
+  \cventryspace
+  {\bfseries #1}\ifblank{#2}{}{, #2}\ifblank{#3}{}{ (#3)}%
+  \ifblank{#5}{}{\enspace{\small\color{cvaccent}#5}}%
+  \cvrightalign{{\small #4}}%
+  \ifblank{#6}{}{#6\par}}
+
+% \cveducation{institution}{degree}{location}{date}{details}
+\renewcommand\cveducation[5]{%
+  \cventryspace
+  {\bfseries #2}\ifblank{#1}{}{, #1}\ifblank{#3}{}{ (#3)}\cvrightalign{{\small #4}}%
+  \ifblank{#5}{}{{\small #5\par}}}
+
+\endinput

@@ -1,0 +1,37 @@
+% =============================================================================
+% cvtheme-modern.sty -- Modern theme (Canadian Modern, Splits, French Modern)
+% Large entry titles, accent-colored tech line with icons, location on the
+% right, compact sidebar typography.
+% =============================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{cvtheme-modern}[2026/11/01 v1.0 CV Studio modern theme]
+\RequirePackage{cvcore}
+
+\appto\cvsidebarstyle{\small}
+
+\renewcommand\cvsectionformat[1]{%
+  {\color{cvheading}\cvheadingfont\cvheadingweight\cvheadingsizecmd\cvheadingcase{#1}\par}%
+  \nobreak\vspace{1pt}{\color{cvdivider}\hrule height 0.6pt}\nobreak\vspace{6pt}}
+
+% \cventry{title}{organization}{location}{date}{tech}{body}
+\renewcommand\cventry[6]{%
+  \cventryspace
+  {\large\bfseries #1}\cvrightalign{{\small\itshape #4}}%
+  \ifblank{#5#2#3}{}{%
+    \vspace{1pt}%
+    \ifblank{#5}{\leavevmode}{{\small\color{cvaccent}\faCode\enspace #5}}%
+    \cvrightalign{\ifblank{#2#3}{}{{\footnotesize\itshape\color{cvsecondary}\faMapMarker*\enspace #2\ifblank{#2}{}{\ifblank{#3}{}{, }}#3}}}}%
+  \ifblank{#6}{}{\vspace{3pt}{\small #6\par}}}
+
+% \cveducation{institution}{degree}{location}{date}{details}
+\renewcommand\cveducation[5]{%
+  \cventryspace
+  {\large\bfseries #1}\cvrightalign{\itshape #4}%
+  \ifblank{#2#3}{}{{\small\itshape #2\ifblank{#3}{}{\ifblank{#2}{}{ -- }#3}}\par}%
+  \ifblank{#5}{}{{\small #5\par}}}
+
+% \cvcertification{name}{issuer}{date}
+\renewcommand\cvcertification[3]{%
+  \par\addvspace{2pt}{\bfseries #1}\ifblank{#2}{}{ (#2)}\cvrightalign{\itshape #3}}
+
+\endinput

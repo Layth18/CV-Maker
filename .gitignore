@@ -1,0 +1,13 @@
+# Dependencies and build output
+node_modules/
+dist/
+out/
+
+# Your personal data: profile, photos, CVs and generated PDFs never leave this PC.
+# A fresh clone starts from server/starter-profile.json instead.
+data/
+
+# Local tooling and scratch files
+.claude/
+*.tmp
+*.log

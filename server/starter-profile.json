@@ -1,0 +1,88 @@
+{
+  "personal": {
+    "firstName": "Your",
+    "lastName": "Name",
+    "headline": { "en": "Your job title or field of study", "fr": "Votre poste ou domaine d'études" },
+    "email": "you@example.com",
+    "phone": "+1 555 000 0000",
+    "location": { "en": "City, Country", "fr": "Ville, Pays" },
+    "links": [
+      { "id": "lnk-linkedin", "kind": "linkedin", "url": "https://www.linkedin.com/in/your-profile", "label": { "en": "LinkedIn", "fr": "LinkedIn" } },
+      { "id": "lnk-github", "kind": "github", "url": "https://github.com/your-username", "label": { "en": "GitHub", "fr": "GitHub" } }
+    ],
+    "photo": null
+  },
+  "summary": {
+    "en": "Two or three sentences about who you are and what you are looking for. Use **bold** to highlight what matters most.",
+    "fr": "Deux ou trois phrases sur qui vous êtes et ce que vous recherchez. Utilisez **le gras** pour mettre en valeur l'essentiel."
+  },
+  "skills": [
+    {
+      "id": "sk-programming",
+      "category": { "en": "Programming", "fr": "Programmation" },
+      "skills": [
+        { "id": "sk-programming-1", "text": { "en": "Python", "fr": "Python" } },
+        { "id": "sk-programming-2", "text": { "en": "JavaScript", "fr": "JavaScript" } },
+        { "id": "sk-programming-3", "text": { "en": "SQL", "fr": "SQL" } }
+      ]
+    },
+    {
+      "id": "sk-tools",
+      "category": { "en": "Tools", "fr": "Outils" },
+      "skills": [
+        { "id": "sk-tools-1", "text": { "en": "Git", "fr": "Git" } },
+        { "id": "sk-tools-2", "text": { "en": "Figma", "fr": "Figma" } }
+      ]
+    }
+  ],
+  "languages": [
+    { "id": "lg-1", "name": { "en": "English", "fr": "Anglais" }, "level": { "en": "Native", "fr": "Langue maternelle" } },
+    { "id": "lg-2", "name": { "en": "French", "fr": "Français" }, "level": { "en": "Intermediate (B2)", "fr": "Intermédiaire (B2)" } }
+  ],
+  "studentLife": [
+    {
+      "id": "sl-clubs",
+      "title": { "en": "Clubs & Associations", "fr": "Clubs & Associations" },
+      "subtitle": { "en": "", "fr": "" },
+      "date": { "en": "", "fr": "" },
+      "style": "bullets",
+      "items": [
+        { "id": "sl-clubs-1", "text": { "en": "**Member** of a student club (2024 -- present)", "fr": "**Membre** d'un club étudiant (2024 -- présent)" } },
+        { "id": "sl-clubs-2", "text": { "en": "Volunteer at a local event", "fr": "Bénévole lors d'un événement local" } }
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "id": "ex-1",
+      "kind": "project",
+      "title": { "en": "Project or job title", "fr": "Titre du projet ou du poste" },
+      "organization": { "en": "Company or context", "fr": "Entreprise ou contexte" },
+      "location": { "en": "City", "fr": "Ville" },
+      "date": { "en": "Summer 2025", "fr": "Été 2025" },
+      "tech": "React, Node.js",
+      "description": {
+        "en": "One sentence describing what you built or did, and the result.",
+        "fr": "Une phrase décrivant ce que vous avez réalisé et le résultat obtenu."
+      },
+      "bullets": [
+        { "id": "ex-1-b1", "text": { "en": "An achievement, ideally with a number (e.g. *cut load time by 40%*).", "fr": "Une réalisation, idéalement chiffrée (ex. *temps de chargement réduit de 40 %*)." } },
+        { "id": "ex-1-b2", "text": { "en": "Another responsibility or result.", "fr": "Une autre responsabilité ou un autre résultat." } }
+      ]
+    }
+  ],
+  "education": [
+    {
+      "id": "ed-1",
+      "institution": { "en": "University name", "fr": "Nom de l'université" },
+      "degree": { "en": "Degree name", "fr": "Intitulé du diplôme" },
+      "location": { "en": "City, Country", "fr": "Ville, Pays" },
+      "date": { "en": "2023 -- Present", "fr": "2023 -- En cours" },
+      "details": { "en": "", "fr": "" }
+    }
+  ],
+  "certifications": [
+    { "id": "ce-1", "name": { "en": "Certification name", "fr": "Nom de la certification" }, "issuer": { "en": "Issuer", "fr": "Organisme" }, "date": { "en": "2025", "fr": "2025" } }
+  ],
+  "customSections": []
+}

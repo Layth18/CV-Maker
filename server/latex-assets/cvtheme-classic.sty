@@ -1,0 +1,17 @@
+% =============================================================================
+% cvtheme-classic.sty -- Classic theme (Canadian Standard, French Classic)
+% Bold titles, organization in italics, bold dates on the right,
+% uppercase section headings with a thin rule. ATS-friendly.
+% =============================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{cvtheme-classic}[2026/11/01 v1.0 CV Studio classic theme]
+\RequirePackage{cvcore}
+
+% The classic look is the cvcore default; only small refinements here.
+\renewcommand\cvprintheadline{{\large\cvheadlinetext}}
+
+\renewcommand\cvsectionformat[1]{%
+  {\color{cvheading}\cvheadingfont\cvheadingweight\cvheadingsizecmd\cvheadingcase{#1}\par}%
+  \nobreak\vspace{2pt}{\color{cvdivider}\hrule height 0.7pt}\nobreak\vspace{6pt}}
+
+\endinput

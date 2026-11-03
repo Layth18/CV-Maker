@@ -1,0 +1,35 @@
+% =============================================================================
+% cvtheme-academic.sty -- Academic theme
+% Small-caps name and headings, italic institutions, restrained color.
+% =============================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{cvtheme-academic}[2026/11/01 v1.0 CV Studio academic theme]
+\RequirePackage{cvcore}
+
+\renewcommand\cvprintname{{\cvnamefont\cvheadingfont\scshape\cvfirstname\ \cvlastname}}
+\renewcommand\cvprintheadline{{\itshape\cvheadlinetext}}
+
+\renewcommand\cvsectionformat[1]{%
+  {\color{cvheading}\cvheadingfont\cvheadingsizecmd\scshape\cvheadingcase{#1}\par}%
+  \nobreak\vspace{1pt}{\color{cvdivider}\hrule height 0.4pt}\nobreak\vspace{5pt}}
+
+% \cventry{title}{organization}{location}{date}{tech}{body}
+\renewcommand\cventry[6]{%
+  \cventryspace
+  {\bfseries #1}\cvrightalign{#4}%
+  \ifblank{#2#3}{}{{\itshape #2\ifblank{#2}{}{\ifblank{#3}{}{, }}#3}\par}%
+  \ifblank{#5}{}{{\small\color{cvsecondary}\cvtechlabel: #5\par}}%
+  \ifblank{#6}{}{\vspace{2pt}#6\par}}
+
+% \cveducation{institution}{degree}{location}{date}{details}
+\renewcommand\cveducation[5]{%
+  \cventryspace
+  {\bfseries #2}\cvrightalign{#4}%
+  {\itshape #1}\ifblank{#3}{}{, #3}\par
+  \ifblank{#5}{}{{\small #5\par}}}
+
+% \cvcertification{name}{issuer}{date}
+\renewcommand\cvcertification[3]{%
+  \par\addvspace{2pt}#1\ifblank{#2}{}{, \textit{#2}}\cvrightalign{#3}}
+
+\endinput

@@ -1,0 +1,362 @@
+% =============================================================================
+% cvcore.sty -- shared LaTeX components for CV Studio documents
+% Compile with XeLaTeX or LuaLaTeX (fontspec).
+%
+% The document's settings.tex sets colors, fonts and lengths; a theme package
+% (cvtheme-*.sty) may redefine the presentation macros below.
+% =============================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{cvcore}[2026/11/01 v1.0 CV Studio shared components]
+
+\RequirePackage{fontspec}
+\RequirePackage{geometry}
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+\RequirePackage{paracol}
+\RequirePackage{enumitem}
+\RequirePackage{etoolbox}
+\RequirePackage{ragged2e}
+\RequirePackage{needspace}
+\RequirePackage{fontawesome5}
+\RequirePackage[hidelinks, pdfpagelabels=false]{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+% -----------------------------------------------------------------------------
+% Default colors (overridden by settings.tex)
+% -----------------------------------------------------------------------------
+\definecolor{cvprimary}{HTML}{0F3C73}
+\definecolor{cvsecondary}{HTML}{3C3C3C}
+\definecolor{cvaccent}{HTML}{006EBE}
+\definecolor{cvtext}{HTML}{3C3C3C}
+\definecolor{cvheading}{HTML}{0F3C73}
+\definecolor{cvdivider}{HTML}{D2D2D2}
+\definecolor{cvheaderbg}{HTML}{0F3C73}
+\definecolor{cvheadertext}{HTML}{FFFFFF}
+\definecolor{cvsidebarbg}{HTML}{EEF3F9}
+\definecolor{cvsidebartext}{HTML}{2B2B2B}
+\definecolor{cvsidebarheading}{HTML}{0F3C73}
+\definecolor{cvsidebardivider}{HTML}{D2D2D2}
+\colorlet{cvbullet}{cvaccent}
+\colorlet{cvsidebarbullet}{cvaccent}
+
+% -----------------------------------------------------------------------------
+% Settings
+% -----------------------------------------------------------------------------
+\newlength\cvsectionskip   \setlength\cvsectionskip{12pt}
+\newlength\cventryskip     \setlength\cventryskip{7pt}
+\newlength\cvheadingsize   \setlength\cvheadingsize{13pt}
+\newlength\cvnamesize      \setlength\cvnamesize{26pt}
+\newlength\cvphotosize     \setlength\cvphotosize{3cm}
+\newlength\cvbannerpad     \setlength\cvbannerpad{0.7cm}
+
+\newif\ifcvheadingupper    \cvheadinguppertrue
+\newif\ifcvheadingbold     \cvheadingboldtrue
+\newif\ifcvsidebarfill     \cvsidebarfillfalse
+\newif\ifcvsidebarright    \cvsidebarrightfalse
+\newif\ifcvsidebarfromtop  \cvsidebarfromtopfalse
+\newif\ifcvinsidebar       \cvinsidebarfalse
+
+\newcommand\cvheadingfont{}          % set with \newfontfamily in settings.tex
+\newcommand\cvbodyalign{\RaggedRight}
+\newcommand\cvtechlabel{Tech Stack}
+\newcommand\cvphotoshape{circle}
+\newcommand\cvphotofit{width}
+\newcommand\cvphotofile{}
+
+\newcommand\cvnamefont{\fontsize{\cvnamesize}{1.15\cvnamesize}\selectfont}
+\newcommand\cvheadingsizecmd{\fontsize{\cvheadingsize}{1.2\cvheadingsize}\selectfont}
+\newcommand\cvheadingcase[1]{\ifcvheadingupper\MakeUppercase{#1}\else#1\fi}
+\newcommand\cvheadingweight{\ifcvheadingbold\bfseries\fi}
+
+% -----------------------------------------------------------------------------
+% Personal information (filled by personal_info.tex)
+% -----------------------------------------------------------------------------
+\newcommand\cvfirstname{}
+\newcommand\cvlastname{}
+\newcommand\cvheadlinetext{}
+\newcommand\cvsetname[2]{\renewcommand\cvfirstname{#1}\renewcommand\cvlastname{#2}}
+\newcommand\cvsetheadline[1]{\renewcommand\cvheadlinetext{#1}}
+% \cvsetphoto[width|height]{file}: the fixed dimension makes the picture cover its frame.
+\newcommand\cvsetphoto[2][width]{\renewcommand\cvphotofit{#1}\renewcommand\cvphotofile{#2}}
+
+\ExplSyntaxOn
+\seq_new:N \g_cv_contacts_seq
+% \cvaddcontact{icon}{text}{url}
+\NewDocumentCommand \cvaddcontact { m m m }
+  { \seq_gput_right:Nn \g_cv_contacts_seq { \cvcontactitem {#1} {#2} {#3} } }
+% \cvprintcontacts{separator}
+\NewDocumentCommand \cvprintcontacts { m }
+  { \seq_use:Nn \g_cv_contacts_seq {#1} }
+\NewDocumentCommand \cvifcontacts { +m } { \seq_if_empty:NF \g_cv_contacts_seq {#1} }
+\ExplSyntaxOff
+
+\newcommand\cvcontactitem[3]{%
+  \mbox{#1\enspace\ifblank{#3}{#2}{\href{#3}{#2}}}}
+% Separator between inline contacts. It is a line-break opportunity: when the
+% line breaks there, the bar disappears instead of dangling at a line end.
+\newcommand\cvcontactsep{\discretionary{}{}{\kern0.5em\textbar\kern0.5em}}
+\newcommand\cvcontactseplines{\par\vspace{2pt}}
+
+% -----------------------------------------------------------------------------
+% Utilities
+% -----------------------------------------------------------------------------
+% Right-aligned trailing text that wraps cleanly (TeXbook p.106 trick).
+\newcommand\cvrightalign[1]{%
+  \ifblank{#1}{\par}{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip1.5em\hbox{}\nobreak\hfil#1%
+  \parfillskip=0pt\finalhyphendemerits=0\par}}}
+
+\newlist{cvbullets}{itemize}{1}
+\setlist[cvbullets]{label={\color{cvbullet}\textbullet}, leftmargin=1.1em, labelsep=0.45em,
+  itemsep=1pt, parsep=0pt, topsep=2pt, partopsep=0pt}
+
+\newlist{cvlines}{itemize}{1}
+\setlist[cvlines]{label={}, leftmargin=0pt, labelsep=0pt, labelwidth=0pt,
+  itemsep=1pt, parsep=0pt, topsep=1pt, partopsep=0pt}
+
+% -----------------------------------------------------------------------------
+% Photo
+% -----------------------------------------------------------------------------
+\newcommand\cv@photoimage{%
+  \ifdefstring{\cvphotofit}{height}%
+    {\includegraphics[height=\cvphotosize]{\cvphotofile}}%
+    {\includegraphics[width=\cvphotosize]{\cvphotofile}}}
+
+% \cvphoto[border color]
+\newcommand\cvphoto[1][white]{%
+  \ifdefempty{\cvphotofile}{}{%
+  \begin{tikzpicture}[baseline=(cvph.center)]
+    \coordinate (cvph) at (0,0);
+    \ifdefstring{\cvphotoshape}{circle}{%
+      \begin{scope}
+        \clip (0,0) circle [radius=0.5\cvphotosize];
+        \node[inner sep=0pt] at (0,0) {\cv@photoimage};
+      \end{scope}
+      \draw[#1, line width=1.6pt] (0,0) circle [radius=0.5\cvphotosize];
+    }{%
+      \ifdefstring{\cvphotoshape}{rounded}%
+        {\def\cv@corner{0.12\cvphotosize}}{\def\cv@corner{0pt}}%
+      \begin{scope}
+        \clip[rounded corners=\cv@corner] (-0.5\cvphotosize,-0.5\cvphotosize) rectangle (0.5\cvphotosize,0.5\cvphotosize);
+        \node[inner sep=0pt] at (0,0) {\cv@photoimage};
+      \end{scope}
+      \draw[#1, line width=1.2pt, rounded corners=\cv@corner] (-0.5\cvphotosize,-0.5\cvphotosize) rectangle (0.5\cvphotosize,0.5\cvphotosize);
+    }%
+  \end{tikzpicture}}}
+
+% -----------------------------------------------------------------------------
+% Headers
+% -----------------------------------------------------------------------------
+\newcommand\cvprintname{{\cvnamefont\cvheadingfont\bfseries\MakeUppercase{\cvfirstname\ \cvlastname}}}
+\newcommand\cvprintheadline{{\large\cvheadlinetext}}
+\newcommand\cvcontactsfont{\small}
+
+\newlength\cv@photocol
+\newcommand\cv@setphotocol{%
+  \ifdefempty{\cvphotofile}{\setlength\cv@photocol{0pt}}%
+    {\setlength\cv@photocol{\dimexpr\cvphotosize+0.6cm\relax}}}
+
+% Full-width colored band at the top of the first page.
+\newlength\cv@bannertext
+\newcommand\cvheaderbanner{%
+  \cv@setphotocol
+  % measured here: inside a minipage \textwidth is redefined
+  \setlength\cv@bannertext{\dimexpr\textwidth-\cv@photocol\relax}%
+  \par\vspace*{-\dimexpr\Gm@tmargin+2pt\relax}%
+  \nointerlineskip
+  \noindent\makebox[\textwidth][l]{\hspace*{-\Gm@lmargin}%
+    {\setlength\fboxsep{0pt}\colorbox{cvheaderbg}{%
+      \begin{minipage}[b]{\paperwidth}
+        \vspace*{\dimexpr\cvbannerpad+2pt\relax}%
+        \hspace*{\Gm@lmargin}%
+        \begin{minipage}[c]{\cv@bannertext}
+          \color{cvheadertext}\cvbodyalign
+          \cvprintname\par\vspace{4pt}
+          \ifdefempty{\cvheadlinetext}{}{\cvprintheadline\par\vspace{5pt}}
+          \cvifcontacts{{\cvcontactsfont\cvprintcontacts{\cvcontactsep}\par}}
+        \end{minipage}%
+        \ifdefempty{\cvphotofile}{}{\hfill\cvphoto[cvheadertext]}%
+        \hspace*{\Gm@rmargin}\par
+        \vspace*{\cvbannerpad}%
+      \end{minipage}}}}%
+  \par\vspace{0.5cm}}
+
+% Name on the left, optional photo on the right.
+\newcommand\cvheaderleft{%
+  \cv@setphotocol
+  \noindent\begin{minipage}[c]{\dimexpr\linewidth-\cv@photocol\relax}
+    \cvbodyalign
+    {\color{cvprimary}\cvprintname}\par\vspace{3pt}
+    \ifdefempty{\cvheadlinetext}{}{{\color{cvsecondary}\cvprintheadline}\par\vspace{5pt}}
+    \cvifcontacts{{\color{cvsecondary}\cvcontactsfont\cvprintcontacts{\cvcontactsep}\par}}
+  \end{minipage}%
+  \ifdefempty{\cvphotofile}{}{\hfill\cvphoto[cvprimary]}%
+  \par\vspace{0.35cm}}
+
+% Everything centered; the photo (if any) sits above the name.
+\newcommand\cvheadercentered{%
+  \begin{center}
+    \ifdefempty{\cvphotofile}{}{\cvphoto[cvprimary]\par\vspace{6pt}}
+    {\color{cvprimary}\cvprintname}\par\vspace{3pt}
+    \ifdefempty{\cvheadlinetext}{}{{\color{cvsecondary}\cvprintheadline}\par\vspace{5pt}}
+    \cvifcontacts{{\color{cvsecondary}\cvcontactsfont\cvprintcontacts{\cvcontactsep}\par}}
+  \end{center}
+  \vspace{0.1cm}}
+
+% Header stacked in the sidebar column (two-column layouts).
+\newcommand\cvheadersidebar{%
+  {\centering
+    \ifdefempty{\cvphotofile}{}{\cvphoto[cvsidebarheading]\par\vspace{10pt}}
+    {\color{cvsidebarheading}\cvnamefont\cvheadingfont\bfseries\MakeUppercase{\cvfirstname}\par\MakeUppercase{\cvlastname}\par}
+    \vspace{4pt}
+    \ifdefempty{\cvheadlinetext}{}{{\color{cvsidebartext}\cvheadlinetext\par}}
+  \par}
+  \vspace{8pt}
+  \cvifcontacts{{\cvcontactsfont\color{cvsidebartext}\let\cvcontactitem\cv@contactline
+    \cvprintcontacts{\cvcontactseplines}\par}}%
+  \vspace{4pt}}
+
+\newcommand\cv@contactline[3]{%
+  \hangindent=1.4em\hangafter=1\makebox[1.4em][l]{#1}\ifblank{#3}{#2}{\href{#3}{#2}}}
+
+% Header at the top of the main column (two-column layouts).
+\newcommand\cvheadermain{\cvheaderleft}
+
+% -----------------------------------------------------------------------------
+% Two-column layout and sidebar background
+% -----------------------------------------------------------------------------
+\newcommand\cvsidebarratio{0.32}
+\newcommand\cv@mainratio{0.68}
+\newlength\cv@sbx
+\newlength\cv@sbw
+\newlength\cvsidebarpad \setlength\cvsidebarpad{0.45cm}
+
+% \cvsetcolumns{left|right}{sidebar ratio}{main ratio}
+% The sidebar is paracol column 0 when on the left, column 1 when on the right.
+\newcommand\cvsetcolumns[3]{%
+  \ifstrequal{#1}{right}%
+    {\cvsidebarrighttrue\columnratio{#3}}%
+    {\cvsidebarrightfalse\columnratio{#2}}%
+  \renewcommand\cvsidebarratio{#2}%
+  \renewcommand\cv@mainratio{#3}}
+
+% paracol: width of column k = ratio_k * (\textwidth - \columnsep).
+% The sidebar background reaches the paper edge and half of the column gap.
+\AtBeginDocument{%
+  \ifcvsidebarright
+    \setlength\cv@sbx{\dimexpr\Gm@lmargin + \cv@mainratio\dimexpr\textwidth-\columnsep\relax + 0.5\columnsep\relax}%
+    \setlength\cv@sbw{\dimexpr\paperwidth-\cv@sbx\relax}%
+  \else
+    \setlength\cv@sbx{0pt}%
+    \setlength\cv@sbw{\dimexpr\Gm@lmargin + \cvsidebarratio\dimexpr\textwidth-\columnsep\relax + 0.5\columnsep\relax}%
+  \fi}
+
+\newcommand\cvmarksidebartop{%
+  \ifcvsidebarfill\tikz[remember picture, overlay]\coordinate (cvsidebartop) at (0,\baselineskip);\fi}
+
+\AddToHook{shipout/background}{%
+  \ifcvsidebarfill
+    \begin{tikzpicture}[remember picture, overlay]
+      \ifnum\value{page}=1
+        \ifcvsidebarfromtop
+          \fill[cvsidebarbg] ([xshift=\cv@sbx]current page.north west)
+            rectangle ([xshift=\cv@sbx+\cv@sbw]current page.south west);
+        \else
+          \fill[cvsidebarbg] ([xshift=\cv@sbx, yshift=\cvsidebarpad]current page.west |- cvsidebartop)
+            rectangle ([xshift=\cv@sbx+\cv@sbw]current page.south west);
+        \fi
+      \else
+        \fill[cvsidebarbg] ([xshift=\cv@sbx]current page.north west)
+          rectangle ([xshift=\cv@sbx+\cv@sbw]current page.south west);
+      \fi
+    \end{tikzpicture}%
+  \fi}
+
+% Column styles. paracol does not scope colors or fonts per column, so each
+% column sets its own state explicitly (the main column restores the defaults).
+\AtBeginDocument{%
+  \colorlet{cvmainheading}{cvheading}%
+  \colorlet{cvmaindivider}{cvdivider}%
+  \colorlet{cvmainbullet}{cvbullet}}
+
+\newcommand\cvsidebarstyle{%
+  \cvinsidebartrue
+  \color{cvsidebartext}%
+  \colorlet{cvheading}{cvsidebarheading}%
+  \colorlet{cvdivider}{cvsidebardivider}%
+  \colorlet{cvbullet}{cvsidebarbullet}%
+  \cvbodyalign}
+
+\newcommand\cvmainstyle{%
+  \cvinsidebarfalse
+  \normalsize\color{cvtext}%
+  \colorlet{cvheading}{cvmainheading}%
+  \colorlet{cvdivider}{cvmaindivider}%
+  \colorlet{cvbullet}{cvmainbullet}%
+  \cvbodyalign}
+
+% -----------------------------------------------------------------------------
+% Sections and entries (themes redefine these)
+% -----------------------------------------------------------------------------
+\newcommand\cvsectionformat[1]{%
+  {\color{cvheading}\cvheadingfont\cvheadingweight\cvheadingsizecmd\cvheadingcase{#1}\par}%
+  \nobreak\vspace{2pt}{\color{cvdivider}\hrule height 0.6pt}\nobreak\vspace{6pt}}
+
+% \cvcolumnstart marks the top of a column: the next section gets no space above.
+\newif\ifcv@colstart
+\newcommand\cvcolumnstart{\global\cv@colstarttrue}
+
+% \cvsection{Title}
+\newcommand\cvsection[1]{%
+  \par
+  \ifcv@colstart\global\cv@colstartfalse\else\addvspace{\cvsectionskip}\fi
+  \needspace{4\baselineskip}%
+  \cvsectionformat{#1}\nobreak\cvbodyalign}
+
+\newcommand\cvsubsection[1]{%
+  \par\addvspace{5pt}{\bfseries\color{cvsecondary}\ifcvinsidebar\color{cvsidebartext}\fi#1\par}\nobreak\vspace{1pt}}
+
+\newcommand\cventryspace{\par\addvspace{\cventryskip}}
+
+% \cventry{title}{organization}{location}{date}{tech}{body}
+\newcommand\cventry[6]{%
+  \cventryspace
+  {\bfseries #1}\ifblank{#2#3}{}{\ \textbar\ \textit{#2\ifblank{#2}{}{\ifblank{#3}{}{, }}#3}}%
+  \cvrightalign{\textbf{#4}}%
+  \ifblank{#5}{}{{\small\itshape\cvtechlabel: #5\par}}%
+  \ifblank{#6}{}{\vspace{1pt}#6\par}}
+
+% \cveducation{institution}{degree}{location}{date}{details}
+\newcommand\cveducation[5]{%
+  \cventryspace
+  {\bfseries #1}\ifblank{#3}{}{\ \textbar\ \textit{#3}}\cvrightalign{\textbf{#4}}%
+  \ifblank{#2}{}{#2\par}%
+  \ifblank{#5}{}{{\small #5\par}}}
+
+% \cvcertification{name}{issuer}{date}
+\newcommand\cvcertification[3]{%
+  \par\addvspace{2pt}{\bfseries #1}\ifblank{#2}{}{, #2}\cvrightalign{\textit{#3}}}
+
+% \cvskillrow{category}{items} -- main column
+\newcommand\cvskillrow[2]{%
+  \par\addvspace{2pt}\ifblank{#1}{}{\textbf{#1:}\ }#2\par}
+
+% \cvsidebarskill{category}{items} -- sidebar
+\newcommand\cvsidebarskill[2]{%
+  \ifblank{#1}{}{\cvsubsection{#1}}#2\par}
+
+% \cvlanguage{name}{level} -- one per line
+\newcommand\cvlanguage[2]{\par\textbf{#1}\ifblank{#2}{}{\ -- #2}\par}
+% \cvlanguageinline{name}{level} -- joined by \cvinlinesep
+\newcommand\cvlanguageinline[2]{\textbf{#1}\ifblank{#2}{}{ (#2)}}
+\newcommand\cvinlinesep{\unskip,\space}
+
+% \cvsummary{text}
+\newcommand\cvsummary[1]{{\color{cvtext}#1\par}}
+
+% \cvline{text} -- plain sidebar line
+\newcommand\cvline[1]{\par#1\par}
+
+\endinput

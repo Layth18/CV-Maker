@@ -1,0 +1,37 @@
+{
+  "name": "cv-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Visual CV editor that generates LaTeX, compiles it with XeLaTeX and previews the real PDF.",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k -n server,client -c cyan,magenta \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "tsx watch --clear-screen=false server/index.ts",
+    "dev:client": "vite",
+    "build": "tsc --noEmit && vite build",
+    "start": "tsx server/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test:latex": "tsx scripts/compile-all.ts"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "5.1.0",
+    "express": "4.21.2",
+    "image-size": "1.1.1",
+    "jszip": "3.10.1",
+    "pdfjs-dist": "4.10.38",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "zustand": "5.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "4.17.21",
+    "@types/node": "22.9.0",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-react": "4.3.4",
+    "concurrently": "9.1.0",
+    "tsx": "4.19.2",
+    "typescript": "5.6.3",
+    "vite": "5.4.11"
+  }
+}
